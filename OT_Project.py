@@ -158,7 +158,7 @@ def plot_x_y(x, y, peak_tuples, x_name, y_name):
     ax.set_ylabel(y_name)
     return plt
 
-def plot_histogram_default(data):
+def plot_histogram(data):
     fig, ax = plt.subplots()
     n, bins, patches = ax.hist(data, color="b", bins = int(len(data)/4), width=0.5)
     ax.set_xlabel("Kraft [pN]")
@@ -167,13 +167,6 @@ def plot_histogram_default(data):
     ax.grid()
     return plt
 
-def plot_histogram(data, x_name):
-    fig, ax = plt.subplots()
-    n, bins, patches = ax.hist(data, color="b", bins = int(len(data)/4), width=0.5)
-    ax.set_xlabel(x_name)
-    ax.set_ylabel("Häufigkeit")
-    ax.grid()
-    return plt
 
 
 # Step 6: Check user input and plot one file or iterate over many different measurements in a folder
@@ -227,8 +220,8 @@ def main(args=None):
         files = glob.glob(f"{args.filename}/*.txt")
         
         if args.calibration is not None:
-            sens = int(input("Sensitivity in m/V: "))
-            stiff = int(input("Stiffness in N/m: "))
+            sens = float(input("Sensitivity in m/V: "))
+            stiff = float(input("Stiffness in N/m: "))
             
         full_force_diff = np.array([])
         for file in files:
@@ -244,8 +237,8 @@ def main(args=None):
             filename = os.path.splitext(base)[0]
             plot_force.savefig(f"{filename}.png")
             
-        plot_histogram = plot_histogram_default(full_force_diff)
-        plot_histogram.savefig("Histogramm.png")
+        plot_hist = plot_histogram(full_force_diff)
+        plot_hist.savefig("Histogramm.png")
         
     
     else: # single .txt file
