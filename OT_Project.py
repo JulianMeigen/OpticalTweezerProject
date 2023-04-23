@@ -32,6 +32,7 @@ This script calculates the significant force fluctuations from given force measu
 """
 
 import re
+import os
 import argparse
 import numpy as np
 import pandas as pd
@@ -146,7 +147,7 @@ def plot_distance_signal(distance, signal, peak_tuples):
         ax.plot(distance[i[0]:i[1]], signal[i[0]:i[1]], c="r")
     ax.set_xlabel("Distanz [$\u03BC$m]")
     ax.set_ylabel("Kraft [pN]")
-    return plt.show()
+    return plt
 
 def plot_x_y(x, y, peak_tuples, x_name, y_name):
     fig, ax = plt.subplots()
@@ -155,7 +156,7 @@ def plot_x_y(x, y, peak_tuples, x_name, y_name):
         ax.plot(x[i[0]:i[1]], y[i[0]:i[1]], c="r")
     ax.set_xlabel(x_name)
     ax.set_ylabel(y_name)
-    return plt.show()
+    return plt
 
 def plot_histogram_default(data):
     fig, ax = plt.subplots()
@@ -164,7 +165,7 @@ def plot_histogram_default(data):
     ax.set_ylabel("Häufigkeit")
     ax.set_title("Histogramm der Kraftdifferenzen")
     ax.grid()
-    return plt.show()
+    return plt
 
 def plot_histogram(data, x_name):
     fig, ax = plt.subplots()
@@ -172,7 +173,7 @@ def plot_histogram(data, x_name):
     ax.set_xlabel(x_name)
     ax.set_ylabel("Häufigkeit")
     ax.grid()
-    return plt.show()
+    return plt
 
 
 # Step 6: Check user input and plot one file or iterate over many different measurements in a folder
@@ -237,11 +238,14 @@ def main(args=None):
             force_diff, peak_anti = get_force_and_peak_anti(y)
             full_force_diff = np.append(full_force_diff, force_diff)
             
-            ##  to verify result: print all plots
-            #print(file, plot_distance_signal(x, y, peak_anti))
+            plot_force = plot_distance_signal(x, y, peak_anti)
             
-        return plot_histogram_default(full_force_diff)
-        
+            base = os.path.basename(file)
+            filename = os.path.splitext(base)[0]
+            plot_force.savefig(f"{filename}.png")
+            
+        plot_histogram = plot_histogram_default(full_force_diff)
+        plot_histogram.savefig("Histogramm.png")
         
     
     else: # single .txt file
@@ -251,10 +255,19 @@ def main(args=None):
         force_diff, peak_anti = get_force_and_peak_anti(y)
         
         if (args.x_axis == "distance") &  (args.y_axis == "xSignal1"): # default
-            return plot_distance_signal(x, y, peak_anti)
+            plot_force = plot_distance_signal(x, y, peak_anti)
+            
+            base = os.path.basename(args.filename)
+            filename = os.path.splitext(base)[0]
+            plot_force.savefig(f"{filename}.png")
         
         else:
-            return plot_x_y(x, y, peak_anti, args.x_axis, args.y_axis)
+            plot_force = plot_x_y(x, y, peak_anti, args.x_axis, args.y_axis)
+            
+            base = os.path.basename(args.filename)
+            filename = os.path.splitext(base)[0]
+            plot_force.savefig(f"{filename}.png")
+
         
         
         
