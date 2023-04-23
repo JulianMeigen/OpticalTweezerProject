@@ -37,7 +37,7 @@ _Below is an instruction of how you can install and run the code._
 Here are a few examples how you can use the script:
 1. Calculates the significant force fluctuations caused by breaking or shifting of actin bundles for a singular file and saves a plot.
    ```sh
-   python OT_Project.py -f 20220919/processed_curves-20220919/force-save-2022.09.19-14.09.55.589 # requires the path for your datafile
+   python OT_Project.py -f 20220919/processed_curves-20220919/force-save-2022.09.19-14.09.55.589.txt # requires the path for your datafile
    ```
 2. Calculates the force fluctuations for all datafiles (.txt) in the given folder and produces a histogram containing all force differences.
    ```sh
